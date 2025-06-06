@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Challenge</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .admin-btn {
+            background-color: #e74c3c;
+        }
+        
+        .admin-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-rows: repeat(7, 1fr);
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 10px;
+        }
+        
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .correct {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+        
+        .present {
+            background-color: #f39c12;
+            color: white;
+            border-color: #f39c12;
+        }
+        
+        .absent {
+            background-color: #95a5a6;
+            color: white;
+            border-color: #95a5a6;
+        }
+        
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+        }
+        
+        .timer, .counter {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .hint {
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            min-height: 30px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .admin-panel {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .room-code {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        
+        .score-display {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+        
+        .player-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .mode-choice {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .choice-btn {
+            padding: 15px 25px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Wordle Challenge</h1>
+        <button id="adminBtn" class="admin-btn">Admin Mode</button>
+    </div>
+    
+    <div id="passwordModal" class="hidden">
+        <div class="game-container">
+            <h2>Enter Admin Password</h2>
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="submitPassword">Submit</button>
+            <button id="cancelPassword">Cancel</button>
+        </div>
+    </div>
+    
+    <div id="adminPanel" class="admin-panel hidden">
+        <h2>Admin Panel</h2>
+        <button id="createRoomBtn">Create Room</button>
+        <div id="roomControls" class="hidden">
+            <div class="mode-selector">
+                <button id="normalModeBtn" class="mode-btn">Normal Mode</button>
+                <button id="riddleModeBtn" class="mode-btn">Riddle Mode</button>
+                <button id="timedModeBtn" class="mode-btn">Timed Mode</button>
+            </div>
+            <div id="roomInfo" class="hidden">
+                <div class="room-code">Room Code: <span id="roomCodeDisplay"></span></div>
+                <div class="score-display">
+                    <h3>Player Scores</h3>
+                    <div id="playerScores"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="joinScreen" class="game-container">
+        <h2>Start and Join Room</h2>
+        <div class="input-area">
+            <input type="text" id="roomCodeInput" placeholder="Enter Room Code">
+            <button id="joinRoomBtn">Join Room</button>
+        </div>
+    </div>
+    
+    <div id="playerSetupScreen" class="game-container hidden">
+        <h2>Player Setup</h2>
+        <div class="player-setup">
+            <p>Choose your play mode:</p>
+            <div class="mode-choice">
+                <button id="soloBtn" class="choice-btn">Solo</button>
+                <button id="duoBtn" class="choice-btn">Duo</button>
+            </div>
+            <div id="nameInputArea" class="hidden">
+                <input type="text" id="playerNameInput" placeholder="Enter your name">
+                <input type="text" id="teamNameInput" placeholder="Enter team name" class="hidden">
+                <button id="startGameBtn">Start Game</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="gameScreen" class="game-container hidden">
+        <div id="playerInfo"></div>
+        <div id="hintArea" class="hint"></div>
+        <div id="timer" class="timer hidden"></div>
+        <div id="counter" class="counter hidden">Words Found: 0</div>
+        <div class="grid" id="grid"></div>
+        <div class="input-area">
+            <input type="text" id="guessInput" maxlength="6" placeholder="Enter your guess">
+            <div>
+                <button id="submitGuess">Submit</button>
+                <button id="skipBtn" class="hidden">Skip Word</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Game data
+        const WORDS = [
+            "BANANA", "ORANGE", "PURPLE", "RABBIT", "TIGGER", "SUNSET", 
+            "GARDEN", "BUTTER", "PENCIL", "CAMERA", "DANCER", "ELEVEN",
+            "FAMILY", "GALAXY", "HAPPY", "JUNGLE", "KETTLE", "LADDER",
+            "MONKEY", "NATURE", "PILLOW", "QUILT", "ROCKET", "SANDAL",
+            "TURTLE", "UMBRELLA", "VOLCANO", "WIZARD", "YELLOW", "ZEBRA"
+        ];
+        
+        const RIDDLES = [
+            { riddle: "I'm tall when I'm young and short when I'm old. What am I?", answer: "CANDLE" },
+            { riddle: "What has keys but can't open locks?", answer: "PIANO" },
+            { riddle: "What gets wet while drying?", answer: "TOWEL" },
+            { riddle: "What has to be broken before you can use it?", answer: "EGG" },
+            { riddle: "I'm light as a feather, yet the strongest man can't hold me for much more than a minute. What am I?", answer: "BREATH" }
+        ];
+        
+        // Game state
+        let currentWord = "";
+        let currentRow = 0;
+        let isAdmin = false;
+        let currentMode = "normal";
+        let roomCode = "";
+        let timerInterval;
+        let timeLeft = 120; // 2 minutes for timed mode
+        let wordsFound = 0;
+        let playerScores = {};
+        let playerName = "";
+        let teamName = "";
+        let isDuoMode = false;
+        
+        // DOM elements
+        const adminBtn = document.getElementById("adminBtn");
+        const passwordModal = document.getElementById("passwordModal");
+        const passwordInput = document.getElementById("passwordInput");
+        const submitPassword = document.getElementById("submitPassword");
+        const cancelPassword = document.getElementById("cancelPassword");
+        const adminPanel = document.getElementById("adminPanel");
+        const createRoomBtn = document.getElementById("createRoomBtn");
+        const roomControls = document.getElementById("roomControls");
+        const normalModeBtn = document.getElementById("normalModeBtn");
+        const riddleModeBtn = document.getElementById("riddleModeBtn");
+        const timedModeBtn = document.getElementById("timedModeBtn");
+        const roomInfo = document.getElementById("roomInfo");
+        const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+        const playerScoresDisplay = document.getElementById("playerScores");
+        const joinScreen = document.getElementById("joinScreen");
+        const roomCodeInput = document.getElementById("roomCodeInput");
+        const joinRoomBtn = document.getElementById("joinRoomBtn");
+        const playerSetupScreen = document.getElementById("playerSetupScreen");
+        const soloBtn = document.getElementById("soloBtn");
+        const duoBtn = document.getElementById("duoBtn");
+        const nameInputArea = document.getElementById("nameInputArea");
+        const playerNameInput = document.getElementById("playerNameInput");
+        const teamNameInput = document.getElementById("teamNameInput");
+        const startGameBtn = document.getElementById("startGameBtn");
+        const gameScreen = document.getElementById("gameScreen");
+        const playerInfo = document.getElementById("playerInfo");
+        const hintArea = document.getElementById("hintArea");
+        const timerDisplay = document.getElementById("timer");
+        const counterDisplay = document.getElementById("counter");
+        const grid = document.getElementById("grid");
+        const guessInput = document.getElementById("guessInput");
+        const submitGuess = document.getElementById("submitGuess");
+        const skipBtn = document.getElementById("skipBtn");
+        
+        // Initialize the game grid
+        function initGrid() {
+            grid.innerHTML = "";
+            for (let i = 0; i < 7; i++) {
+                const row = document.createElement("div");
+                row.className = "row";
+                for (let j = 0; j < 6; j++) {
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+                    cell.id = `cell-${i}-${j}`;
+                    row.appendChild(cell);
+                }
+                grid.appendChild(row);
+            }
+        }
+        
+        // Admin mode functions
+        adminBtn.addEventListener("click", () => {
+            if (isAdmin) {
+                adminPanel.classList.add("hidden");
+                isAdmin = false;
+                adminBtn.textContent = "Admin Mode";
+            } else {
+                passwordModal.classList.remove("hidden");
+            }
+        });
+        
+        submitPassword.addEventListener("click", () => {
+            if (passwordInput.value === "123") {
+                isAdmin = true;
+                adminBtn.textContent = "Exit Admin";
+                passwordModal.classList.add("hidden");
+                adminPanel.classList.remove("hidden");
+                passwordInput.value = "";
+            } else {
+                alert("Incorrect password!");
+            }
+        });
+        
+        cancelPassword.addEventListener("click", () => {
+            passwordModal.classList.add("hidden");
+            passwordInput.value = "";
+        });
+        
+        // Room creation
+        createRoomBtn.addEventListener("click", () => {
+            roomControls.classList.remove("hidden");
+            createRoomBtn.disabled = true;
+        });
+        
+        normalModeBtn.addEventListener("click", () => {
+            startGame("normal");
+        });
+        
+        riddleModeBtn.addEventListener("click", () => {
+            startGame("riddle");
+        });
+        
+        timedModeBtn.addEventListener("click", () => {
+            startGame("timed");
+        });
+        
+        function startGame(mode) {
+            currentMode = mode;
+            roomCode = generateRoomCode();
+            roomCodeDisplay.textContent = roomCode;
+            roomInfo.classList.remove("hidden");
+            
+            // Initialize empty player scores
+            playerScores = {};
+            updateScoreDisplay();
+        }
+        
+        function generateRoomCode() {
+            return Math.random().toString(36).substring(2, 6).toUpperCase();
+        }
+        
+        function updateScoreDisplay() {
+            playerScoresDisplay.innerHTML = "";
+            for (const [player, score] of Object.entries(playerScores)) {
+                const scoreElement = document.createElement("div");
+                scoreElement.textContent = `${player}: ${score}`;
+                playerScoresDisplay.appendChild(scoreElement);
+            }
+        }
+        
+        // Player joining
+        joinRoomBtn.addEventListener("click", () => {
+            if (roomCodeInput.value === roomCode) {
+                joinScreen.classList.add("hidden");
+                playerSetupScreen.classList.remove("hidden");
+            } else {
+                alert("Invalid room code!");
+            }
+        });
+        
+        // Player setup
+        soloBtn.addEventListener("click", () => {
+            isDuoMode = false;
+            nameInputArea.classList.remove("hidden");
+            teamNameInput.classList.add("hidden");
+            playerNameInput.placeholder = "Enter your name";
+        });
+        
+        duoBtn.addEventListener("click", () => {
+            isDuoMode = true;
+            nameInputArea.classList.remove("hidden");
+            teamNameInput.classList.remove("hidden");
+            playerNameInput.placeholder = "Enter your name (team member 1)";
+        });
+        
+        startGameBtn.addEventListener("click", () => {
+            playerName = playerNameInput.value.trim();
+            teamName = teamNameInput.value.trim();
+            
+            if (!playerName) {
+                alert("Please enter your name!");
+                return;
+            }
+            
+            if (isDuoMode && !teamName) {
+                alert("Please enter a team name!");
+                return;
+            }
+            
+            // Register player in admin panel
+            const displayName = isDuoMode ? `${teamName} (${playerName})` : playerName;
+            playerScores[displayName] = 0;
+            updateScoreDisplay();
+            
+            // Update player info display
+            playerInfo.textContent = isDuoMode ? 
+                `Team: ${teamName} | Player: ${playerName}` : 
+                `Player: ${playerName}`;
+            
+            // Start the game
+            playerSetupScreen.classList.add("hidden");
+            gameScreen.classList.remove("hidden");
+            setupGame();
+        });
+        
+        // Game setup
+        function setupGame() {
+            initGrid();
+            currentRow = 0;
+            
+            // Select a random word
+            currentWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+            console.log("Current word:", currentWord); // For debugging
+            
+            // Set up hints based on mode
+            hintArea.textContent = "";
+            timerDisplay.classList.add("hidden");
+            counterDisplay.classList.add("hidden");
+            skipBtn.classList.add("hidden");
+            
+            if (currentMode === "normal") {
+                hintArea.textContent = `Hint: The word starts with "${currentWord[0]}"`;
+            } else if (currentMode === "riddle") {
+                const randomRiddle = RIDDLES[Math.floor(Math.random() * RIDDLES.length)];
+                currentWord = randomRiddle.answer;
+                console.log("Riddle answer:", currentWord); // For debugging
+                hintArea.textContent = `Riddle: ${randomRiddle.riddle}`;
+            } else if (currentMode === "timed") {
+                hintArea.textContent = `Hint: The word starts with "${currentWord[0]}"`;
+                timerDisplay.classList.remove("hidden");
+                counterDisplay.classList.remove("hidden");
+                skipBtn.classList.remove("hidden");
+                timeLeft = 120;
+                wordsFound = 0;
+                counterDisplay.textContent = `Words Found: ${wordsFound}`;
+                startTimer();
+            }
+            
+            // Focus the input
+            guessInput.focus();
+        }
+        
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert(`Time's up! You found ${wordsFound} words.`);
+                    skipBtn.disabled = true;
+                    submitGuess.disabled = true;
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Game logic
+        submitGuess.addEventListener("click", checkGuess);
+        guessInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                checkGuess();
+            }
+        });
+        
+        skipBtn.addEventListener("click", () => {
+            if (currentMode === "timed") {
+                setupNewWord();
+            }
+        });
+        
+        function checkGuess() {
+            const guess = guessInput.value.toUpperCase();
+            
+            if (guess.length !== 6) {
+                alert("Please enter a 6-letter word!");
+                return;
+            }
+            
+            if (!WORDS.includes(guess) && !RIDDLES.some(r => r.answer === guess)) {
+                alert("Not in word list!");
+                return;
+            }
+            
+            // Update the grid
+            for (let i = 0; i < 6; i++) {
+                const cell = document.getElementById(`cell-${currentRow}-${i}`);
+                cell.textContent = guess[i];
+                
+                if (guess[i] === currentWord[i]) {
+                    cell.classList.add("correct");
+                } else if (currentWord.includes(guess[i])) {
+                    cell.classList.add("present");
+                } else {
+                    cell.classList.add("absent");
+                }
+            }
+            
+            // Check if won
+            if (guess === currentWord) {
+                if (currentMode === "timed") {
+                    wordsFound++;
+                    counterDisplay.textContent = `Words Found: ${wordsFound}`;
+                    // Update scores
+                    const displayName = isDuoMode ? `${teamName} (${playerName})` : playerName;
+                    playerScores[displayName] = wordsFound;
+                    updateScoreDisplay();
+                    setupNewWord();
+                } else {
+                    setTimeout(() => {
+                        alert("Congratulations! You guessed the word!");
+                    }, 500);
+                }
+                return;
+            }
+            
+            // Move to next row
+            currentRow++;
+            guessInput.value = "";
+            
+            // Check if lost
+            if (currentRow === 7) {
+                setTimeout(() => {
+                    alert(`Game over! The word was ${currentWord}`);
+                    if (currentMode === "timed") {
+                        setupNewWord();
+                    }
+                }, 500);
+            }
+        }
+        
+        function setupNewWord() {
+            currentRow = 0;
+            initGrid();
+            
+            // Select a new random word
+            currentWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+            console.log("New word:", currentWord); // For debugging
+            
+            // Update hint
+            hintArea.textContent = `Hint: The word starts with "${currentWord[0]}"`;
+            
+            // Focus the input
+            guessInput.value = "";
+            guessInput.focus();
+        }
+        
+        // Initialize the grid when page loads
+        initGrid();
+    </script>
+</body>
+</html>
