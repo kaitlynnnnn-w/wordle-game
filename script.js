@@ -373,6 +373,27 @@ function setupTimedMode() {
         </div>
         <div class="word-progress">Word 1 of 5</div>
     `;
+
+    function updateScoreBar() {
+  elements.scoreBar.innerHTML = '';
+  gameState.teams.forEach((team, index) => {
+    const teamScore = document.createElement('div');
+    teamScore.className = 'team-score';
+    teamScore.innerHTML = `
+      👥 ${team}: ${gameState.scores[team]}
+    `;
+    // Add click handler for team switching
+    teamScore.addEventListener('click', () => {
+      gameState.currentTeamIndex = index;
+      document.querySelectorAll('.team-score').forEach(el => 
+        el.classList.remove('selected')
+      );
+      teamScore.classList.add('selected');
+      alert(`Now playing: ${team}`); // Optional confirmation
+    });
+    elements.scoreBar.appendChild(teamScore);
+  });
+}
     
     // Start timer
     startTimer(30, () => {
@@ -448,6 +469,51 @@ function processTimedGuess() {
             }, 2000);
         }
     }
+}
+
+function processTimedGuess() {
+  // ... (existing code)
+  gameState.hintLevel++; // Increment hint level on wrong guess
+  updateHint(); // Add this line to trigger hints
+}
+
+function updateHint() {
+  const hintArea = document.querySelector('.hint-area');
+  const word = gameState.currentWord.toLowerCase();
+  
+  switch(gameState.hintLevel) {
+    case 1:
+      hintArea.textContent = `Hint: The word contains ${countLetters(word)}.`;
+      break;
+    case 2:
+      hintArea.textContent = `Hint: Starts with "${word[0]}".`;
+      break;
+    case 3:
+      hintArea.textContent = `Hint: ${getCategoryHint(word)}`; // Add your own categories
+      break;
+  }
+}
+
+// Helper functions for hints
+function countLetters(word) {
+  const counts = {};
+  for (const letter of word) {
+    counts[letter] = (counts[letter] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .filter(([_, count]) => count > 1)
+    .map(([letter, count]) => `${count} "${letter}"s`)
+    .join(' and ') || 'all unique letters';
+}
+
+function getCategoryHint(word) {
+  // Customize these categories based on your word list!
+  const categories = {
+    apple: "fruit",
+    beach: "vacation spot",
+    // Add more word:category pairs
+  };
+  return `Category: ${categories[word] || "common object"}`;
 }
 
 // Update hint in timed mode
