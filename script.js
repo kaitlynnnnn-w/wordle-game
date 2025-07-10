@@ -94,6 +94,8 @@ function setupTeamNameEntry(numTeams) {
 function startGame() {
     const nameInputs = document.querySelectorAll('.team-name-input');
     gameState.teams = Array.from(nameInputs).map(input => input.value.trim());
+
+    document.querySelector('.continue-btn').addEventListener('click', startNextMode);
     
     // Initialize scores
     gameState.teams.forEach(team => {
