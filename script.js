@@ -110,6 +110,7 @@ function startGame() {
 
 function showModeIntro(mode) {
     elements.introScreen.classList.remove('hidden');
+    elements.introScreen.classList.remove('hidden');
     let introText = '';
     let nextAction = '';
 
@@ -162,6 +163,13 @@ function showModeIntro(mode) {
 
     elements.introContent.innerHTML = introText;
     document.querySelector('.continue-btn').textContent = nextAction;
+     // Fix: Update the button text directly
+    document.getElementById('intro-continue-btn').textContent = nextAction;
+    
+    // Fix: Remove any existing listeners and add fresh one
+    const continueBtn = document.getElementById('intro-continue-btn');
+    continueBtn.replaceWith(continueBtn.cloneNode(true));
+    document.getElementById('intro-continue-btn').addEventListener('click', startNextMode);
 }
 
 function startNextMode() {
