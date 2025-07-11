@@ -1,11 +1,199 @@
-/* [Previous CSS remains the same until line 150] */
+/* Base Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
 
-/* New additions for feedback icons and team switching */
+.screen {
+    text-align: center;
+    padding: 25px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 20px;
+    width: 90%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Button Styles */
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Team Selection */
+.team-select {
+    margin: 20px 0;
+}
+
+.team-btn {
+    min-width: 120px;
+}
+
+/* Name Entry */
+.team-input {
+    margin: 15px 0;
+}
+
+.team-name-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Score Bar */
+#score-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 12px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.team-score {
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.team-score.selected {
+    background-color: #4CAF50;
+    color: white;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
+
+.team-score.pulse {
+    animation: pulse 0.5s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.team-emoji {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+/* Game Boards */
+.game-screen {
+    margin-top: 70px;
+    padding: 20px;
+}
+
+.word-row {
+    display: flex;
+    justify-content: center;
+    margin: 8px;
+}
+
+.letter-box {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #ddd;
+    margin: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.correct {
+    background-color: #6aaa64;
+    color: white;
+    border-color: #6aaa64;
+}
+
+.present {
+    background-color: #c9b458;
+    color: white;
+    border-color: #c9b458;
+}
+
+.absent {
+    background-color: #787c7e;
+    color: white;
+    border-color: #787c7e;
+}
+
+/* Input Area */
+.input-area {
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.word-input {
+    padding: 12px;
+    font-size: 18px;
+    width: 250px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.word-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+/* Feedback Icons */
 .guess-feedback {
     display: inline-block;
-    margin-left: 10px;
-    font-size: 1.5em;
+    margin-left: 15px;
+    font-size: 28px;
     font-weight: bold;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .correct-guess {
@@ -16,30 +204,73 @@
     color: #f44336;
 }
 
-.team-score {
-    cursor: pointer;
-    transition: all 0.3s;
-    padding: 8px 15px;
-    border-radius: 5px;
+/* Timer */
+.timer {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px;
+    color: #333;
 }
 
-.team-score.selected {
-    background: #4CAF50;
-    color: white;
-    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+/* Hint Areas */
+.hint-area {
+    font-style: italic;
+    margin: 15px 0;
+    padding: 12px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    font-size: 18px;
 }
 
 /* Riddle Mode Specific */
-.riddle-hint {
-    font-size: 1.2em;
-    margin: 15px 0;
-    padding: 10px;
-    background: #f8f8f8;
-    border-radius: 5px;
+.riddle-container {
+    margin: 20px 0;
+}
+
+.riddle-text {
+    font-size: 22px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e9f7ef;
+    border-radius: 10px;
 }
 
 .letter-reveal {
-    font-size: 1.5em;
-    letter-spacing: 5px;
-    margin: 20px 0;
+    font-size: 32px;
+    letter-spacing: 8px;
+    margin: 25px 0;
+    font-family: monospace;
+}
+
+/* Game Over Screen */
+#final-scores {
+    margin: 30px 0;
+    font-size: 20px;
+}
+
+#final-scores li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    list-style-type: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .letter-box {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+    
+    #score-bar {
+        flex-direction: column;
+        padding: 8px 0;
+    }
+    
+    .team-score {
+        margin: 4px 0;
+        padding: 6px 10px;
+    }
 }
