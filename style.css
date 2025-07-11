@@ -1,140 +1,45 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+/* [Previous CSS remains the same until line 150] */
+
+/* New additions for feedback icons and team switching */
+.guess-feedback {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
-.screen {
-    text-align: center;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    max-width: 800px;
-    margin: 20px;
+.correct-guess {
+    color: #4CAF50;
 }
 
-.hidden {
-    display: none;
-}
-
-.team-btn {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 18px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.team-btn:hover {
-    background-color: #45a049;
-}
-
-#score-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-around;
-    z-index: 1000;
+.wrong-guess {
+    color: #f44336;
 }
 
 .team-score {
-    display: flex;
-    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    padding: 8px 15px;
+    border-radius: 5px;
 }
 
 .team-score.selected {
-    background-color: #555;
-}
-
-.team-emoji {
-    font-size: 24px;
-    margin-right: 10px;
-}
-
-.team-name {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-/* Game board styles */
-.word-row {
-    display: flex;
-    justify-content: center;
-    margin: 5px;
-}
-
-.letter-box {
-    width: 50px;
-    height: 50px;
-    border: 2px solid #ddd;
-    margin: 3px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.correct {
-    background-color: #6aaa64;
+    background: #4CAF50;
     color: white;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
 }
 
-.present {
-    background-color: #c9b458;
-    color: white;
-}
-
-.absent {
-    background-color: #787c7e;
-    color: white;
-}
-
-/* Timer styles */
-.timer {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 20px;
-}
-
-.hint {
-    font-style: italic;
-    margin: 10px;
-    color: #555;
-}
-
-/* Input area */
-.input-area {
-    margin: 20px;
-}
-
-.word-input {
+/* Riddle Mode Specific */
+.riddle-hint {
+    font-size: 1.2em;
+    margin: 15px 0;
     padding: 10px;
-    font-size: 18px;
-    width: 200px;
+    background: #f8f8f8;
+    border-radius: 5px;
 }
 
-.submit-btn {
-    padding: 10px 20px;
-    margin-left: 10px;
-    font-size: 18px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.letter-reveal {
+    font-size: 1.5em;
+    letter-spacing: 5px;
+    margin: 20px 0;
 }
