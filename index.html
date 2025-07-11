@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Initial Screen -->
+    <!-- Setup Screen -->
     <div id="setup-screen" class="screen">
         <h1>Wordle-Lingo Hybrid</h1>
         <div class="team-select">
@@ -18,17 +18,15 @@
         </div>
     </div>
 
-    <!-- Team Name Entry Screen -->
+    <!-- Team Name Entry -->
     <div id="name-entry-screen" class="screen hidden">
         <h1>Enter Team Names</h1>
         <div id="team-name-inputs"></div>
         <button id="start-game-btn">Start Game</button>
     </div>
 
-    <!-- Score Bar (always visible during game) -->
-    <div id="score-bar" class="hidden">
-        <!-- Dynamically populated based on teams -->
-    </div>
+    <!-- Score Bar -->
+    <div id="score-bar" class="hidden"></div>
 
     <!-- Game Screens -->
     <div id="intro-screen" class="screen hidden">
@@ -36,17 +34,9 @@
         <button class="continue-btn">Continue</button>
     </div>
 
-    <div id="normal-game-screen" class="game-screen hidden">
-        <!-- Normal Wordle-style game UI -->
-    </div>
-
-    <div id="timed-game-screen" class="game-screen hidden">
-        <!-- Timed mode UI -->
-    </div>
-
-    <div id="riddle-game-screen" class="game-screen hidden">
-        <!-- Riddle mode UI -->
-    </div>
+    <div id="normal-game-screen" class="game-screen hidden"></div>
+    <div id="riddle-game-screen" class="game-screen hidden"></div>
+    <div id="timed-game-screen" class="game-screen hidden"></div>
 
     <div id="game-over-screen" class="screen hidden">
         <h1>Game Over!</h1>
