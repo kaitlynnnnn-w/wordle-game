@@ -106,6 +106,9 @@ function startGame() {
     gameState.currentMode = null;
     gameState.currentRound = 1;
     showModeIntro('normal');
+    // Fix: Reset the intro button before showing intro
+    resetIntroButton();
+    showModeIntro('normal');
 }
 
 function showModeIntro(mode) {
@@ -418,6 +421,15 @@ function startTimer(seconds, callback) {
             callback();
         }
     }, 1000);
+}
+
+function resetIntroButton() {
+    const oldBtn = document.getElementById('intro-continue-btn');
+    if (oldBtn) {
+        const newBtn = oldBtn.cloneNode(true);
+        oldBtn.replaceWith(newBtn);
+        newBtn.addEventListener('click', startNextMode);
+    }
 }
 
 // ========================
