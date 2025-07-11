@@ -44,7 +44,7 @@ let riddleWords = [];
 // CORE FUNCTIONS
 // ========================
 
-function init() {
+function init() {{
     fetch('words/normal.json')
         .then(response => response.json())
         .then(data => normalWords = data)
@@ -57,6 +57,12 @@ function init() {
             { riddle: "I have keys but no locks...", answer: "keyboard" },
             { riddle: "This item moves but...", answer: "clock" }
         ]);
+elements.startGameBtn.addEventListener('click', startGame);
+    document.getElementById('play-again-btn').addEventListener('click', resetGame);
+    
+    // Fix: Directly target the intro continue button
+    document.getElementById('intro-continue-btn').addEventListener('click', startNextMode);
+}
 
     document.querySelectorAll('.team-btn').forEach(btn => {
         btn.addEventListener('click', () => setupTeamNameEntry(parseInt(btn.dataset.teams)));
